@@ -2,13 +2,14 @@
 
 NAMESPACE=mynamespace
 STORAGECLASS=exoscale-sbs
-DEPLOY=mydeploy
+#DEPLOY=deploy/mydeploy
+DEPLOY=sts/mysts
 PVC=mypvc
 SIZE=10Gi
 
 # Scale to 0
 echo -n "Scaling deployment to 0: "
-kubectl scale --replicas=0 deploy/$DEPLOY -n $NAMESPACE
+kubectl scale --replicas=0 $DEPLOY -n $NAMESPACE
 [ $? -eq 0 ] && echo "" || exit 1
 
 # Create PV with new storageclass and same size
@@ -140,7 +141,7 @@ kubectl wait -n $NAMESPACE pvc/$PVC --for=jsonpath='{.status.phase}'=Bound
 
 # Scale back to 1
 echo -n "Scaling back application to 1: "
-kubectl scale --replicas=1 deploy/$DEPLOY -n $NAMESPACE
+kubectl scale --replicas=1 $DEPLOY -n $NAMESPACE
 [ $? -eq 0 ] && echo "" || exit 1
 
 # Cleanup
